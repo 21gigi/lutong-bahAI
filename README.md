@@ -1,4 +1,4 @@
-# Lutong-bahAI 🍲 (๑•̀ㅂ•́)و✧
+# Lutong-bahAI 🍲 ꒰ ៸៸⪫𝅒⪪៸៸ ꒱ 𖹭 
 
 Welcome to **Lutong-bahAI** — my little project where I built a Filipino recipe dataset from scratch through web scraping and data cleaning! ✨  
 This is the first step towards creating an **ulam recommender system** that suggests dishes based on the ingredients you already have at home. 🏠🥘  
@@ -25,7 +25,7 @@ This is the first step towards creating an **ulam recommender system** that sugg
 ---
 
 ## 🌟 Final Notes
-Made with 🍲, 🐍, and a dash of (´｡• ᵕ ｡`) ♡  
+Made with 🍲, 🐍, and a dash of ≽(•⩊ •マ≼
 Excited to grow this into a full **recommender app** — stay tuned!  
 
-(っ˘ω˘ς ) Thank you for visiting my little coding kusina ♡
+(づ> v <)づ♡ Thank you for visiting my little coding kusina ♡

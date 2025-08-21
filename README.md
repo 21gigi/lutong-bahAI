@@ -3,6 +3,8 @@
 Welcome to **Lutong-bahAI** — my little project where I built a Filipino recipe dataset from scratch through web scraping and data cleaning! ✨  
 This is the first step towards creating an **ulam recommender system** that suggests dishes based on the ingredients you already have at home. 🏠🥘  
 
+🔗 **Try the app here → [Lutong-bahAI Live Demo](https://21gigi.github.io/lutong-bahAI)**  
+
 ---
 
 ## 🌸 About this Repo
@@ -29,7 +31,15 @@ This is the first step towards creating an **ulam recommender system** that sugg
 - **Python** 🐍 → data scraping & cleaning (BeautifulSoup, Pandas, Regex)  
 - **Jupyter Notebook** 📒 → experiments and step-by-step workflow  
 - **HTML + JavaScript** 🌐 → simple front-end prototype (`index.html`)  
+- **GitHub Pages** 🌍 → hosting the live demo  
 - **GitHub** 🐙 → version control & repo hosting  
+
+---
+
+## 🚀 How to Run Locally
+1. Clone this repo  
+2. Open `index.html` in your browser  
+3. Enjoy the recipe suggestions ✨  
 
 ---
 

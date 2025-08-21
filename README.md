@@ -44,18 +44,18 @@ This is the first step towards creating an **ulam recommender system** that sugg
 ---
 
 ## 🔮 Future AI Integration
-The name **Lutong-bahAI** hints at the long-term vision for this project 🌸✨.  
-Right now, the app is a simple ingredient-based recipe recommender, but in the future I plan to integrate **AI-powered features**, such as:
+(｡•́︿•̀｡) The name **Lutong-bahAI** might sound a little extra right now since wala pa talaga siyang “AI” inside… *yet*!  
+But this project is meant to grow, and here’s what I dream of adding someday ✨🌸  
 
 1. **Smart Recipe Recommender (NLP + Semantic Search)**  
-   - Going beyond keyword matching — the app will *understand* ingredients and still suggest the right dish.  
-   - Example: If you enter `manok + suka + bawang`, it should recommend **Adobo** even without typing “toyo.”  
+   - Going beyond plain keyword matching — the app will *understand* your ingredients and suggest the right ulam.  
+   - Example: If you enter `manok + suka + bawang`, it should still recommend **Adobo** even without typing “toyo.” (｡•̀ᴗ-)✧  
 
 2. **Ingredient Substitution AI**  
-   - Suggests alternatives when you’re missing something in your pantry.  
-   - Example: *“No calamansi? Try lemon, or vinegar + sugar.”*  
+   - Suggests cute alternatives when you’re missing something.  
+   - Example: *“No calamansi? Try lemon, or vinegar + sugar.”* (✿◠‿◠)  
 
-With these, **Lutong-bahAI** aims to become your **smart kusina buddy** that helps you cook delicious meals with what you already have at home. 🏠🥘  
+With these, **Lutong-bahAI** will truly become a **smart kusina buddy** that helps you cook yummy meals with whatever you already have at home. 🏠🥘  
 
 ---
 

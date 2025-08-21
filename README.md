@@ -61,6 +61,6 @@ With these, **Lutong-bahAI** will truly become a **smart kusina buddy** that hel
 
 ## 🌟 Final Notes
 Made with 🍲, 🐍, and a dash of ≽(•⩊ •マ≼  
-Excited to grow this into a full **recommender app** — stay tuned!  
+Excited to grow this into a full **recommender ai app** — stay tuned!  
 
 (づ> v <)づ♡ Thank you for visiting my little coding kusina ♡

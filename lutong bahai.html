@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LutongBahAI - Ulam Recommender</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- PapaParse CSV Parser CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
+    
+    <!-- Google Fonts: Poppins & Noto Sans Tagalog for Baybayin -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Tagalog&display=swap" rel="stylesheet">
+
+
+    <style>
+        /* --- NEW COLOR PALETTE --- */
+        /* Inspired by the user's reference image for a soft, high-contrast theme. */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #FDEBE8; /* Main background - soft rose/peach */
+            color: #43302B; /* Primary text - dark brown */
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #FDEBE8;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #E6C2BB; /* A soft, muted pink */
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #D8B3AC;
+        }
+        /* Style for the ingredient input tags */
+        .tag {
+            display: inline-flex;
+            align-items: center;
+            background-color: #F5D3CE; /* Light pink accent */
+            color: #744234; /* Darker brown text for contrast */
+            padding: 4px 12px;
+            border-radius: 9999px;
+            margin: 4px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+        .tag-remove {
+            margin-left: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            color: #B95C50; /* A stronger pink for the 'x' */
+        }
+        /* This ensures the footer stays at the bottom */
+        .main-container {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        .content-wrap {
+            flex: 1;
+        }
+        /* Apply the Noto Sans Tagalog font to the Baybayin text */
+        .baybayin {
+            font-family: 'Noto Sans Tagalog', sans-serif;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <div class="main-container">
+        <div class="content-wrap container mx-auto p-4 md:p-8 max-w-2xl">
+
+            <!-- Header Section -->
+            <header class="text-center mb-10">
+                <h1 class="baybayin text-5xl md:text-6xl font-bold text-stone-700 mb-2">
+                    ᜎᜓᜆᜓᜅ᜔ ᜊᜑᜁ
+                </h1>
+                <p class="text-stone-600"><span class="font-semibold">LutongBahAI:</span> Discover delicious Filipino dishes you can make right now.</p>
+            </header>
+
+            <!-- Ingredient Input Section -->
+            <div class="bg-white/60 p-6 rounded-2xl shadow-lg shadow-rose-100 mb-10 border border-rose-200/80">
+                <label for="ingredient-input" class="block text-lg font-semibold mb-3">What's in your pantry?</label>
+                <div id="tags-container" class="flex flex-wrap items-center bg-white/60 p-2 rounded-xl border border-rose-200/80 mb-2">
+                     <input type="text" id="ingredient-input" placeholder="Add an ingredient and press Enter..." class="bg-transparent focus:outline-none flex-grow p-2 placeholder-stone-400">
+                </div>
+                <p class="text-sm text-stone-500">Tip: Type "pork, soy sauce, garlic" to see what happens!</p>
+            </div>
+
+            <!-- Results Section -->
+            <main id="results-container">
+                <!-- Recommended recipes will be dynamically inserted here -->
+                <div id="placeholder" class="text-center text-stone-500 py-10">
+                    <p>Your culinary creations await...</p>
+                </div>
+            </main>
+        
+        </div>
+        
+        <!-- Footer Section -->
+        <footer class="text-center p-4 text-sm text-stone-500">
+            <p>Recipe data sourced from <a href="https://panlasangpinoy.com/" target="_blank" class="font-semibold hover:underline">Panlasang Pinoy</a>.</p>
+            <p>An independent project by Angela Cabanes.</p>
+        </footer>
+
+    </div>
+
+    <script>
+        const ingredientInput = document.getElementById('ingredient-input');
+        const tagsContainer = document.getElementById('tags-container');
+        const resultsContainer = document.getElementById('results-container');
+        const placeholder = document.getElementById('placeholder');
+
+        let userIngredients = new Set();
+        let recipes = [];
+
+        // --- 1. Load and Parse CSV Data using Fetch ---
+        async function loadRecipes() {
+            try {
+                const response = await fetch('cleaned_recipes.csv');
+                if (!response.ok) {
+                    throw new Error(`Network response was not ok: ${response.statusText}`);
+                }
+                const csvText = await response.text();
+                
+                Papa.parse(csvText, {
+                    header: true,
+                    skipEmptyLines: true,
+                    complete: (results) => {
+                        // The ingredients are a string that looks like a list. We need to parse it.
+                        recipes = results.data
+                            .filter(row => row.instructions && row.instructions.trim() !== '')
+                            .map(row => {
+                                try {
+                                    // Replace single quotes with double quotes to make it valid JSON
+                                    const ingredientsJsonString = row.ingredients.replace(/'/g, '"');
+                                    row.parsedIngredients = JSON.parse(ingredientsJsonString);
+                                } catch (e) {
+                                    console.error(`Could not parse ingredients for "${row.title}":`, row.ingredients);
+                                    row.parsedIngredients = []; // Default to empty array on error
+                                }
+                                return row;
+                            });
+                        console.log(`Loaded and processed ${recipes.length} recipes from CSV.`);
+                    },
+                    error: (error) => {
+                        console.error("Error parsing CSV:", error);
+                        resultsContainer.innerHTML = `<div class="text-red-500 text-center">Error parsing the CSV file.</div>`;
+                    }
+                });
+            } catch (error) {
+                 console.error("Could not fetch recipe file:", error);
+                 resultsContainer.innerHTML = `<div class="text-red-500 text-center">Could not load <strong>cleaned_recipes.csv</strong>. Make sure it's in the same folder as index.html and you're using Live Server.</div>`;
+            }
+        }
+
+        // --- 3. Handle User Input and Tags ---
+        ingredientInput.addEventListener('keyup', (e) => {
+            if (e.key === 'Enter' || e.key === ',') {
+                const ingredient = e.target.value.trim().replace(/,/g, '');
+                if (ingredient) {
+                    addTag(ingredient);
+                    e.target.value = '';
+                    findRecipes();
+                }
+            }
+        });
+        
+        function addTag(ingredient) {
+            const normalizedIngredient = ingredient.toLowerCase();
+            if (userIngredients.has(normalizedIngredient)) return;
+
+            userIngredients.add(normalizedIngredient);
+
+            const tag = document.createElement('div');
+            tag.className = 'tag';
+            tag.innerText = ingredient;
+
+            const removeBtn = document.createElement('span');
+            removeBtn.className = 'tag-remove';
+            removeBtn.innerHTML = '&times;';
+            removeBtn.onclick = () => {
+                userIngredients.delete(normalizedIngredient);
+                tag.remove();
+                findRecipes();
+            };
+
+            tag.appendChild(removeBtn);
+            tagsContainer.insertBefore(tag, ingredientInput);
+        }
+
+        // --- 4. Core Recommendation Logic ---
+        function findRecipes() {
+            if (userIngredients.size === 0) {
+                resultsContainer.innerHTML = '';
+                resultsContainer.appendChild(placeholder);
+                return;
+            }
+
+            placeholder.style.display = 'none';
+            resultsContainer.innerHTML = '';
+
+            const recommendations = recipes.map(recipe => {
+                const recipeIngredients = new Set(recipe.parsedIngredients.map(i => i.toLowerCase()));
+                const haveIngredients = [];
+                const missingIngredients = [];
+
+                recipeIngredients.forEach(ing => {
+                    let found = false;
+                    for (const userIng of userIngredients) {
+                        if (ing.includes(userIng) || userIng.includes(ing)) {
+                            found = true;
+                            break;
+                        }
+                    }
+                    if (found) {
+                        haveIngredients.push(ing);
+                    } else {
+                        missingIngredients.push(ing);
+                    }
+                });
+                
+                const matchPercentage = (recipeIngredients.size > 0) ? (haveIngredients.length / recipeIngredients.size) * 100 : 0;
+
+                return {
+                    ...recipe,
+                    haveIngredients,
+                    missingIngredients,
+                    matchPercentage,
+                    haveCount: haveIngredients.length,
+                    missingCount: missingIngredients.length
+                };
+            }).filter(recipe => recipe.haveCount > 0);
+
+            // --- SMARTER SORTING LOGIC ---
+            recommendations.sort((a, b) => {
+                if (b.haveCount !== a.haveCount) return b.haveCount - a.haveCount;
+                if (a.missingCount !== b.missingCount) return a.missingCount - b.missingCount;
+                return b.matchPercentage - a.matchPercentage;
+            });
+
+            displayResults(recommendations.slice(0, 15));
+        }
+        
+        // --- 5. Display Results ---
+        function displayResults(recommendations) {
+            if (recommendations.length === 0) {
+                resultsContainer.innerHTML = `<div class="text-center text-stone-500 py-10">No recipes found. Try adding more ingredients!</div>`;
+                return;
+            }
+
+            recommendations.forEach(recipe => {
+                const card = document.createElement('div');
+                card.className = 'bg-white/60 rounded-2xl shadow-lg shadow-rose-100 p-6 mb-6 transition-transform duration-300 hover:scale-105 border border-rose-200/80';
+
+                let ingredientsHTML = `<div class="flex flex-wrap gap-2 text-sm">`;
+                
+                recipe.haveIngredients.forEach(ing => {
+                    ingredientsHTML += `<span class="bg-emerald-50 text-emerald-800 px-3 py-1 rounded-full font-medium">${ing}</span>`;
+                });
+                
+                recipe.missingIngredients.forEach(ing => {
+                    ingredientsHTML += `<span class="bg-rose-50 text-rose-800 px-3 py-1 rounded-full font-medium">${ing}</span>`;
+                });
+
+                ingredientsHTML += `</div>`;
+
+                // --- NEW: Format instructions into a numbered list ---
+                const instructionSteps = recipe.instructions
+                    .split('.') // Split the paragraph into sentences
+                    .filter(step => step.trim() !== '') // Remove any empty steps
+                    .map(step => `<li class="mb-2">${step.trim()}.</li>`); // Format each step as a list item
+
+                const instructionsHTML = `<ol class="list-decimal list-inside mt-2 text-stone-600 text-sm leading-relaxed">${instructionSteps.join('')}</ol>`;
+
+
+                card.innerHTML = `
+                    <div class="flex justify-between items-start mb-4">
+                        <h2 class="text-2xl font-bold">${recipe.title}</h2>
+                        <span class="bg-rose-100 text-rose-700 text-sm font-bold px-3 py-1 rounded-full">${Math.round(recipe.matchPercentage)}% Match</span>
+                    </div>
+                    <p class="font-semibold text-stone-600 mb-3">You have ${recipe.haveCount}, you're missing ${recipe.missingCount}:</p>
+                    <div class="mb-5">
+                        ${ingredientsHTML}
+                    </div>
+                    <details>
+                        <summary class="cursor-pointer font-semibold text-rose-500 hover:text-rose-700">View Instructions</summary>
+                        ${instructionsHTML}
+                    </details>
+                    <a href="${recipe.url}" target="_blank" class="text-sky-600 hover:underline mt-4 inline-block text-xs">Source: Panlasang Pinoy</a>
+                `;
+                resultsContainer.appendChild(card);
+            });
+        }
+
+        // --- Initial Load ---
+        window.onload = loadRecipes;
+    </script>
+</body>
+</html>

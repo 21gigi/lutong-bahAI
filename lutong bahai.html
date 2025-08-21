@@ -125,7 +125,7 @@
         // --- 1. Load and Parse CSV Data using Fetch ---
         async function loadRecipes() {
             try {
-                const response = await fetch('cleaned_recipes.csv');
+                const response = await fetch('data/cleaned_recipes.csv');
                 if (!response.ok) {
                     throw new Error(`Network response was not ok: ${response.statusText}`);
                 }
@@ -306,3 +306,4 @@
     </script>
 </body>
 </html>
+

@@ -8,24 +8,33 @@ This is the first step towards creating an **ulam recommender system** that sugg
 ## 🌸 About this Repo
 (っ˘ω˘ς ) This is my kusina-inspired coding diary ✨  
 
-- 🥘 Web-scraped 2,000+ Filipino recipes from [Panlasang Pinoy](https://panlasangpinoy.com/categories/recipes)  
-- 🔍 Cleaned and standardized ingredients list for easier use in a recommender system  
-- 📊 Ready-to-use dataset (`cleaned_recipes.csv`) for future experiments (like in Jupyter or a UI app)  
-- 💡 To be expanded into a browser-friendly app soon (Streamlit or Flutter!)  
+- 🥘 Web-scraped **2,000+ Filipino recipes** from [Panlasang Pinoy](https://panlasangpinoy.com/categories/recipes)  
+- 🔍 Cleaned and standardized **ingredients list** for easier use in a recommender system  
+- 📊 Provided a **ready-to-use dataset** (`cleaned_recipes.csv`) for future experiments (like in Jupyter or a UI app)  
+- 💻 Currently includes a **prototype app (`index.html`)** that demonstrates the recipe recommender ✨  
+- 💡 To be expanded into a browser-friendly version (Streamlit or Flutter) in the future!  
 
 ---
 
 ## 📂 Contents
+- `index.html` → prototype of the Lutong-bahAI app 🍴  
 - `notebooks/` → Jupyter notebooks for scraping + cleaning 🍳  
 - `data/`  
    - `scraped_recipes.csv` → raw scraped data  
    - `cleaned_recipes.csv` → processed dataset ready for analysis  
-- (future) `app/` → UI for Lutong-bahAI ✨  
+
+---
+
+## 🛠️ Tools & Tech
+- **Python** 🐍 → data scraping & cleaning (BeautifulSoup, Pandas, Regex)  
+- **Jupyter Notebook** 📒 → experiments and step-by-step workflow  
+- **HTML + JavaScript** 🌐 → simple front-end prototype (`index.html`)  
+- **GitHub** 🐙 → version control & repo hosting  
 
 ---
 
 ## 🌟 Final Notes
-Made with 🍲, 🐍, and a dash of ≽(•⩊ •マ≼
+Made with 🍲, 🐍, and a dash of ≽(•⩊ •マ≼  
 Excited to grow this into a full **recommender app** — stay tuned!  
 
 (づ> v <)づ♡ Thank you for visiting my little coding kusina ♡
